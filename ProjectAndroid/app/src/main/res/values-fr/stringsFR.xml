@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ApplicationGéolocalisation</string>
+    <string name="hello_world">Bonjour le monde !</string>
+    <string name="nav_open">Ouvrir le menu</string>
+    <string name="nav_close">Fermer le menu</string>
+    <string name="nav_home">Accueil</string>
+    <string name="nav_settings">Paramètres</string>
+    <string name="nav_map">Carte</string>
+    <string name="unknown_location">Localisation inconnue</string>
+    <string name="photo">Prendre une photo</string>
+</resources>
