@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +29,8 @@ import fr.android.projectandroid.utils.LocaleHelper;
 public class TakePhotoActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+
     private String currentPhotoPath;
     private Uri photoUri;
 
@@ -50,7 +53,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
         takePhotoBtn.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
             } else {
                 dispatchTakePictureIntent();
             }
@@ -59,7 +62,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(v -> {
             String description = descriptionEditText.getText().toString();
             if (currentPhotoPath != null) {
-                uploadMetadataToServer(currentPhotoPath, description, 1, null); // user_id = 1, location_id = null
+                uploadMetadataToServer(currentPhotoPath, description, 1, null);
             } else {
                 Toast.makeText(this, "Aucune photo à envoyer", Toast.LENGTH_SHORT).show();
             }
@@ -69,21 +72,24 @@ public class TakePhotoActivity extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile;
+            File photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                Toast.makeText(this, "Erreur lors de la création du fichier", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Erreur création fichier image", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (photoFile != null) {
                 photoUri = FileProvider.getUriForFile(this,
-                        "com.example.geolocalisationapp.fileprovider",
+                        "fr.android.projectandroid.fileprovider", // DOIT correspondre à AndroidManifest + res/xml/file_paths.xml
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        } else {
+            Toast.makeText(this, "Aucune appli photo disponible", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -101,7 +107,12 @@ public class TakePhotoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Photo prise avec succès 📷", Toast.LENGTH_SHORT).show();
+            File imgFile = new File(currentPhotoPath);
+            if (imgFile.exists() && imgFile.length() > 0) {
+                Toast.makeText(this, "Photo prise avec succès 📷", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Fichier photo introuvable ou vide ❌", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -122,7 +133,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (responseCode == 200) {
-                        Toast.makeText(this, "Métadonnées envoyées au serveur ✅", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Métadonnées envoyées ✅", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "Erreur serveur : " + responseCode, Toast.LENGTH_LONG).show();
                     }
@@ -131,5 +142,17 @@ public class TakePhotoActivity extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(this, "Erreur réseau", Toast.LENGTH_SHORT).show());
             }
         }).start();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(this, "Permission caméra refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
