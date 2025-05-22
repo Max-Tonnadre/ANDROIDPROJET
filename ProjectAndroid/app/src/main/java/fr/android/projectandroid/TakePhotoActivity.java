@@ -1,6 +1,7 @@
 package fr.android.projectandroid;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fr.android.projectandroid.utils.LocaleHelper;
+
 public class TakePhotoActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -30,6 +33,11 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     private EditText descriptionEditText;
     private Button takePhotoBtn, sendBtn;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.INSTANCE.onAttach(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
