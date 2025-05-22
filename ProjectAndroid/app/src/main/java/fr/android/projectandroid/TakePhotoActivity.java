@@ -62,7 +62,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(v -> {
             String description = descriptionEditText.getText().toString();
             if (currentPhotoPath != null) {
-                uploadMetadataToServer(currentPhotoPath, description, 1, null);
+                uploadMetadataToPostgres(currentPhotoPath, description, 1, null);
             } else {
                 Toast.makeText(this, "Aucune photo à envoyer", Toast.LENGTH_SHORT).show();
             }
@@ -116,34 +116,6 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadMetadataToServer(String filePath, String description, int userId, Integer locationId) {
-        new Thread(() -> {
-            try {
-                String serverUrl = "https://tonserveur.com/api/upload_metadata.php";
-
-                String params = "user_id=" + userId +
-                        "&file_path=" + filePath +
-                        "&description=" + description +
-                        "&location_id=" + (locationId != null ? locationId : "null");
-
-                java.net.URL url = new java.net.URL(serverUrl + "?" + params);
-                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                int responseCode = conn.getResponseCode();
-
-                runOnUiThread(() -> {
-                    if (responseCode == 200) {
-                        Toast.makeText(this, "Métadonnées envoyées ✅", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Erreur serveur : " + responseCode, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (Exception e) {
-                runOnUiThread(() -> Toast.makeText(this, "Erreur réseau", Toast.LENGTH_SHORT).show());
-            }
-        }).start();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -155,4 +127,42 @@ public class TakePhotoActivity extends AppCompatActivity {
             }
         }
     }
+    private void uploadMetadataToPostgres(String filePath, String description, int userId, Integer locationId) {
+        new Thread(() -> {
+            try {
+                String url = "jdbc:postgresql://ep-fancy-bush-a5gt24z3-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require";
+                String user = "neondb_owner";
+                String password = "npg_2xD5ByRbUwgt";
+
+                Class.forName("org.postgresql.Driver");
+                try (java.sql.Connection conn = java.sql.DriverManager.getConnection(url, user, password)) {
+                    String sql = "INSERT INTO photos (file_path, description, user_id, location_id) VALUES (?, ?, ?, ?)";
+                    try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                        stmt.setString(1, filePath);
+                        stmt.setString(2, description);
+                        stmt.setInt(3, userId);
+                        if (locationId != null) {
+                            stmt.setInt(4, locationId);
+                        } else {
+                            stmt.setNull(4, java.sql.Types.INTEGER);
+                        }
+
+                        int rows = stmt.executeUpdate();
+
+                        runOnUiThread(() -> {
+                            if (rows > 0) {
+                                Toast.makeText(this, "Métadonnées envoyées à Neon ✅", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(this, "Aucune ligne insérée ❌", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show());
+            }
+        }).start();
+    }
+
 }
