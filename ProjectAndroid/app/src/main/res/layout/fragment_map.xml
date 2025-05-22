@@ -8,4 +8,39 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/text_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#CCFFFFFF"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:elevation="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Adresse inconnue" />
+
+    <ImageView
+        android:id="@+id/center_cross"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:layout_gravity="center"
+        android:alpha="0.7" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="bottom"
+        android:paddingBottom="32dp">
+
+        <Button
+            android:id="@+id/btn_park_here"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Je suis garé ici" />
+    </LinearLayout>
 </FrameLayout>

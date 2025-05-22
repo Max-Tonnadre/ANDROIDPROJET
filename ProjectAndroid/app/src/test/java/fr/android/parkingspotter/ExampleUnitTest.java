@@ -1,4 +1,4 @@
-package fr.android.projectandroid;
+package fr.android.parkingspotter;
 
 import org.junit.Test;
 

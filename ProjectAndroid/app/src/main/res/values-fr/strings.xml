@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ParkingSpotter</string>
+    <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
+    <string name="navigation_drawer_close">Fermer le menu de navigation</string>
+    <string name="menu_map">Carte</string>
+    <string name="menu_history">Historique</string>
+    <string name="menu_settings">Paramètres</string>
+    <string name="menu_auth">Compte</string>
+    <string name="error_empty_fields">Veuillez remplir le formulaire</string>
+    <string name="history_show_on_map">Voir sur la carte</string>
+    <string name="history_show_directions">Voir l\'itinéraire</string>
+    <string name="history_delete_point">Supprimer ce point</string>
+</resources>
