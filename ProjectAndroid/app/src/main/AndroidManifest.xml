@@ -18,12 +18,12 @@
             android:name="fr.android.projectandroid.MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" android:exported="false" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="fr.android.projectandroid.TakePhotoActivity" />
+        <activity android:name=".TakePhotoActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAtTYL02STcoZ47zL55EK7dUS4T0Pn-iEI"/>
