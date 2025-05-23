@@ -26,16 +26,7 @@
         <activity android:name="fr.android.projectandroid.TakePhotoActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAtTYL02STcoZ47zL55EK7dUS4T0Pn-iEI" />
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.geolocalisationapp.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+            android:value="AIzaSyAtTYL02STcoZ47zL55EK7dUS4T0Pn-iEI"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="fr.android.projectandroid.fileprovider"
