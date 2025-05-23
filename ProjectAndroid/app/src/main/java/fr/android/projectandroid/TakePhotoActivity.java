@@ -138,7 +138,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     }
 
     private Connection connectToMySQL() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/android";
+        String url = "jdbc:mysql://10.0.2.2:3306/android";
         String user = "root";
         String password = "admin";
         Class.forName("com.mysql.cj.jdbc.Driver");
