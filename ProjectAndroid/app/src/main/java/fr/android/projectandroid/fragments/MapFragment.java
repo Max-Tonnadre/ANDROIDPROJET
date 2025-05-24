@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -28,11 +30,16 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.android.projectandroid.R;
+import fr.android.projectandroid.database.LocationDatabaseHelper;
+
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
+
+    private Location currentLocation;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,9 +52,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+        Button sendButton = view.findViewById(R.id.btn_send_location);
+        sendButton.setOnClickListener(v -> {
+            if (currentLocation != null) {
+                saveLocationToDatabase(currentLocation);
+            }
+        });
+
 
         return view;
     }
+    private void saveLocationToDatabase(Location location) {
+        LocationDatabaseHelper dbHelper = new LocationDatabaseHelper(requireContext());
+        dbHelper.insertLocation(location.getLatitude(), location.getLongitude());
+        Toast.makeText(requireContext(), "Localisation enregistrée", Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -67,14 +87,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showLocationOnMap(Location location) {
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        currentLocation = location;
 
+        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
         String address = getAddressFromLocation(location);
 
         mMap.clear();
         mMap.addMarker(new MarkerOptions().position(userLocation).title(address));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
     }
+
 
     private String getAddressFromLocation(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
