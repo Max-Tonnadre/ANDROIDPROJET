@@ -17,6 +17,8 @@ import fr.android.projectandroid.fragments.MapFragment;
 import fr.android.projectandroid.fragments.SettingsFragment;
 import fr.android.projectandroid.fragments.TakePhotoFragment;
 import fr.android.projectandroid.utils.LocaleHelper;
+import androidx.appcompat.app.AppCompatDelegate;
+import fr.android.projectandroid.utils.AppPreferences;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int currentThemeMode = AppPreferences.INSTANCE.getThemeMode(this);
+        AppCompatDelegate.setDefaultNightMode(currentThemeMode);
+        Log.d("MainActivity_Theme", "Thème appliqué au démarrage (avant super.onCreate): " + currentThemeMode);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

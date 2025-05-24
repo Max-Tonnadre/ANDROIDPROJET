@@ -8,4 +8,12 @@
     <string name="nav_map">Map</string>
     <string name="unknown_location">Unknown location</string>
     <string name="photo">Take a picture</string>
+    <string name="language">Language</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>"
+    <string name="dark">Dark</string>
+    <string name="features">Features:</string>
+    <string name="live_location">Live location</string>
+    <string name="save_location">Save location</string>
+    <string name="save_picture">Save picture</string>
 </resources>

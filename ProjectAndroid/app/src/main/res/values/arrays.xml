@@ -7,4 +7,9 @@
         <item>Italiano</item>
         <item>Deustch</item>
     </string-array>
+
+    <string-array name="themes">
+        <item>@string/light</item>
+        <item>@string/dark</item>
+    </string-array>
 </resources>

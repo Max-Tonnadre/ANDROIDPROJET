@@ -9,4 +9,12 @@
     <string name="nav_map">Carte</string>
     <string name="unknown_location">Localisation inconnue</string>
     <string name="photo">Prendre une photo</string>
+    <string name="language">Langue</string>
+    <string name="theme">Thème</string>
+    <string name="light">Clair</string>
+    <string name="dark">Sombre</string>
+    <string name="features">Fonctionnalités:</string>
+    <string name="live_location">Localisation en temps réel</string>
+    <string name="save_location">Enregistrer la localisation</string>
+    <string name="save_picture">Enregistrer la photo</string>
 </resources>

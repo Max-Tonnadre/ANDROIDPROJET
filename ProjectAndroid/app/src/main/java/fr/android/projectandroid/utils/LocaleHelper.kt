@@ -1,7 +1,5 @@
 package fr.android.projectandroid.utils
 
-// In AppPreferences.kt or a new LocaleHelper.kt
-
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -23,9 +21,8 @@ object LocaleHelper {
         }
     }
 
-    // Call this in your Application's attachBaseContext and in each Activity's attachBaseContext
     fun onAttach(context: Context): Context {
-        val lang = AppPreferences.getSelectedLanguage(context) // Get saved lang
+        val lang = AppPreferences.getSelectedLanguage(context)
         return setLocale(context, lang)
     }
 

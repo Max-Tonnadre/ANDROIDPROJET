@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorInverseSurface" format="color" />
+    <attr name="colorInverseOnSurface" format="color" />
+    <attr name="colorInversePrimary" format="color" />
+</resources>

@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatDelegate
 
 object AppPreferences {
     private const val PREFS_NAME =
         "fr.android.projectandroid.settings_prefs" // Choose a unique name
     private const val KEY_SELECTED_LANGUAGE = "selected_language"
     private const val DEFAULT_LANGUAGE = "en" // Set a default language
+    private const val PREF_KEY_THEME_MODE = "selected_theme_mode";
 
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -60,6 +62,39 @@ object AppPreferences {
             }
         } else {
             Log.e("AppPreferences", "Spinner adapter is null in setSpinnerToSavedLanguage!")
+        }
+    }
+
+
+
+
+
+    fun saveThemeMode(context: Context, themeMode: Int) {
+        val editor = getSharedPreferences(context).edit()
+        editor.putInt(PREF_KEY_THEME_MODE, themeMode)
+        editor.apply()
+    }
+
+    fun getThemeMode(context: Context): Int {
+        return getSharedPreferences(context).getInt(PREF_KEY_THEME_MODE,
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+
+    fun setSpinnerToSavedTheme(context: Context, spinner: Spinner) {
+        val currentThemeMode = getThemeMode(context)
+        val adapter = spinner.adapter
+        if (adapter != null) {
+            // On suppose que l'ordre dans le spinner est: Clair (0), Sombre (1), Système (2)
+            val positionToSelect = when (currentThemeMode) {
+                AppCompatDelegate.MODE_NIGHT_NO -> 0
+                AppCompatDelegate.MODE_NIGHT_YES -> 1
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> 2
+                else -> 2 // Défaut à Système
+            }
+            // Vérifier si la position est valide avant de la sélectionner
+            if (positionToSelect < adapter.count) {
+                spinner.setSelection(positionToSelect, false) // false pour éviter de déclencher onItemSelected initialement
+            }
         }
     }
 }
